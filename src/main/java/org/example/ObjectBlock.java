@@ -111,21 +111,44 @@ public class ObjectBlock {
     }
 
     private void findRowHeaders() {
-        for(int y=rangeMinY;y<=rangeMaxY;y++) {
+        for(int y=rangeMaxY;y>rangeMinY;y--) {
             boolean isHeader=true;
-            for(int x=rangeMinX;x<=rangeMaxX;x++) {
+            int lineLenghtWithGap=0;
+            int longestLineLenghtWithGap=0;
+            int startOfLineCurrent=-1;
+            int endOfLine=-1;
+
+            for(int x=rangeMaxX;x>rangeMinX;x--) {
+                boolean currentGap=false;
+                //Cell has value
                 if(grid[x][y]!=null && grid[x][y].containsData()){
-                    isHeader=false;
+                    if(startOfLineCurrent==-1) {
+                        startOfLineCurrent=x;
+                    }
+
+                    if(currentGap){
+                        currentGap=false;
+                        lineLenghtWithGap++;
+                    }
+                    lineLenghtWithGap++;
+                //Cell has no value
+                }else if(currentGap){
+                    if(lineLenghtWithGap>longestLineLenghtWithGap){
+                        longestLineLenghtWithGap=lineLenghtWithGap;
+                        endOfLine=x;
+                        startOfLineCurrent=-1;
+                    }
+                    lineLenghtWithGap=0;
+                }else{
+                    currentGap=true;
+                }
+
+                if(lineLenghtWithGap>longestLineLenghtWithGap){
+                    longestLineLenghtWithGap=lineLenghtWithGap;
+                    endOfLine=x;
                 }
             }
-            if(isHeader){
-                rowHeaders=new ObjectCell[rangeMaxX-rangeMinX+1];
-                for(int x=rangeMinX;x<=rangeMaxX;x++) {
-                    rowHeaders[x-rangeMinX]=grid[x][y];
-                }
-                rowLableMin=y;
-                break;
-            }
+            System.out.println("LINE "+ y +" Longest line lenght with gap:"+longestLineLenghtWithGap+" from "+startOfLineCurrent+" to "+endOfLine);
         }
     }
 
