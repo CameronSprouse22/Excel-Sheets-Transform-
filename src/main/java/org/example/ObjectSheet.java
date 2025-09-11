@@ -16,10 +16,11 @@ public class ObjectSheet {
 
     public ObjectSheet(Sheet sheet) {
         this.sheet = sheet;
+
         int maxColNum = 0;
         for (Row row : sheet) {
             if (row != null) {
-                maxColNum = Math.max(maxColNum, row.getLastCellNum()); // getLastCellNum() is 1-based
+                maxColNum = Math.max(maxColNum, row.getLastCellNum() - 1); // getLastCellNum() is 1-based
             }
         }
 
@@ -27,8 +28,8 @@ public class ObjectSheet {
         cellsGrid = new ObjectCell[maxColNum][sheet.getLastRowNum()];
         for (int y = 0; y < sheet.getLastRowNum(); y++) {
             for (int x = 0; x < maxColNum; x++) {
-                if (sheet.getRow(y) != null && sheet.getRow(y).getCell(x) != null) {
-                    cellsGrid[x][y] = new ObjectCell(sheet.getRow(y).getCell(x));
+                if (sheet.getRow(y) != null && sheet.getRow(y).getCell(x+1) != null) {
+                    cellsGrid[x][y] = new ObjectCell(sheet.getRow(y).getCell(x+1));
                     System.out.print("["+x + "," + y + "->" + cellsGrid[x][y].toString()+"]");
                 } else {
                     cellsGrid[x][y] = new ObjectCell(x,y);
@@ -65,6 +66,7 @@ public class ObjectSheet {
         int counter=0;
         ObjectCell startingCell = getNextDataCell(nonNullCells);
         while (getNextDataCell(nonNullCells) != null) {
+            System.out.println("LEEEEETH "+nonNullCells.length + nonNullCells[0].length);
             ArrayList<ObjectCell> foundBlockArrayList = returnBlockMap(nonNullCells, startingCell.getX(), startingCell.getY());
             ObjectBlock blockFound = new ObjectBlock(foundBlockArrayList,cellsGrid.length,cellsGrid[0].length);
             blocks.add(blockFound);

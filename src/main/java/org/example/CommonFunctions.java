@@ -141,7 +141,9 @@ public class CommonFunctions {
     }
 
     public static String getStringPrintValue(Cell cell){
-        if(cell.getCellType().equals(CellType.STRING)){
+        if(cell == null) {
+            return "[NULL OBJECT!]";
+        } else if(cell.getCellType().equals(CellType.STRING)){
             return cell.getStringCellValue();
         }else if(cell.getCellType().equals(CellType.NUMERIC)){
             return  ""+cell.getNumericCellValue();
@@ -159,4 +161,24 @@ public class CommonFunctions {
             return  ""+"[ELSE]";
         }
     }
+
+    public static void ObjectBlockPrint(ObjectCell[][] cellsGrid)  {
+        try {
+            for (int y = 0; y < cellsGrid[0].length; y++) {
+                for (int x = 0; x < cellsGrid.length; x++) {
+                    if (cellsGrid[x][y] != null && cellsGrid[x][y] != null) {
+                        System.out.print("[" + x + "," + y + "->" + cellsGrid[x][y].toString() + "]");
+                    } else {
+                        cellsGrid[x][y] = new ObjectCell(x, y);
+                        System.out.print("[" + x + "," + y + "->null" + "]");
+                    }
+                }
+                System.out.println("");
+            }
+            System.out.println("");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

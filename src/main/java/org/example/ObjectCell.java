@@ -15,13 +15,14 @@ public class ObjectCell {
     boolean isVoidSpace;
     boolean isVerbatimString;
     boolean hasValue;
+    boolean isFormula;
     String Stringvalue;
 
     public ObjectCell(Cell cell){
         this.cell = cell;
-        this.x = cell.getColumnIndex();
-        this.y = cell.getRowIndex();
-        this.hasValue = CommonFunctions.containsRawData(cell);
+        this.x = cell.getColumnIndex()-1;
+        this.y = cell.getRowIndex()-1;
+        this.hasValue = CommonFunctions.containsRawData(cell) || cell.getCellType()==CellType.FORMULA;
         this.Stringvalue= CommonFunctions.getStringPrintValue(cell);
     }
 
@@ -48,6 +49,10 @@ public class ObjectCell {
 
     public boolean containsData() {
         return hasValue;
+    }
+
+    public boolean isFormula() {
+        return isFormula;
     }
 
     public int getX() {
