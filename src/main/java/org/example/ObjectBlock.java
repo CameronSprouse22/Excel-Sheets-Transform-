@@ -1,7 +1,5 @@
 package org.example;
 
-import org.apache.poi.ss.usermodel.Cell;
-
 import java.util.ArrayList;
 
 public class ObjectBlock {
@@ -295,6 +293,10 @@ public class ObjectBlock {
 
         }
         return maxfreq;
+    }
+
+    public ObjectCell[][] getBlockGrid(){
+        return grid;
     }
 
 

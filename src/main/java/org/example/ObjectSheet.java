@@ -1,10 +1,8 @@
 package org.example;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,6 +11,7 @@ public class ObjectSheet {
     ArrayList<ObjectTable> tables = new ArrayList<>();
     ObjectCell[][] cellsGrid;
     HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
+    ArrayList<ObjectBlock> blocks = new ArrayList<>();
 
     public ObjectSheet(Sheet sheet) {
         this.sheet = sheet;
@@ -59,7 +58,7 @@ public class ObjectSheet {
             }
             System.out.println("");
         }
-        ArrayList<ObjectBlock> blocks = new ArrayList<>();
+
 
 
         ObjectCell[][] nonNullCells = cellsGrid;
@@ -125,6 +124,10 @@ public class ObjectSheet {
 
     public boolean neesaryRowsPresent(ArrayList<String> rows){
         return false;
+    }
+
+    public ArrayList<ObjectBlock> getSheetBlocks(){
+        return blocks;
     }
 
 }

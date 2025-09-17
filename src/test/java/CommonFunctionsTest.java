@@ -1,17 +1,15 @@
 
 import org.apache.poi.ss.usermodel.Sheet;
-import org.example.ObjectCell;
-import org.example.ObjectFile;
-import org.example.ObjectSheet;
+import org.example.*;
 import org.junit.jupiter.api.Test;
-import org.example.CommonFunctions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class CommonFunctionsTest {
 
     CommonFunctions commonFunctions =new CommonFunctions();
-    String sampleFilePath="C:\\Users\\camer\\OneDrive\\Documents\\Repos\\Speed_Sheets\\SpeedSheets\\Sample Data.xlsx";
+    String sampleFilePath="Sample Data.xlsx";
 
     @Test
     public void copyFile() throws IOException {
@@ -23,6 +21,20 @@ public class CommonFunctionsTest {
         ObjectFile of = new ObjectFile(sampleFilePath);
         Sheet sampleSheet = of.getSheets().get(0);
         ObjectSheet os = new ObjectSheet(sampleSheet);
+
+    }
+
+    @Test
+    public void markTypesBlocksWrite() throws IOException {
+        ObjectFile of = new ObjectFile(sampleFilePath);
+        Sheet sampleSheet = of.getSheets().get(0);
+        ObjectSheet os = new ObjectSheet(sampleSheet);
+        ArrayList<ObjectBlock> blocks = os.getSheetBlocks();
+        int counter=0;
+        for (ObjectBlock block : blocks) {
+            boolean ew =  ExcelWriter.writeExcelFileFrom2DArray("test"+counter++ +".xlsx",block.getBlockGrid());
+        }
+
 
     }
 
