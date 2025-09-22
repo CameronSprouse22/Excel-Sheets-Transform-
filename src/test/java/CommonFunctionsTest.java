@@ -32,7 +32,10 @@ public class CommonFunctionsTest {
         ArrayList<ObjectBlock> blocks = os.getSheetBlocks();
         int counter=0;
         for (ObjectBlock block : blocks) {
-            boolean ew =  ExcelWriter.writeExcelFileFrom2DArray("test"+counter++ +".xlsx",block.getBlockGrid());
+            boolean ew =  ExcelWriter.writeExcelFileFrom2DArray("test"+counter +".xlsx",block.getBlockGrid());
+            boolean ew2 =  ExcelWriter.writeUseDisExcelFileFrom2DArray("testDES"+counter +".xlsx",block.getBlockGrid());
+            counter++;
+
         }
 
 

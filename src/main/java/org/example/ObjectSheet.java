@@ -27,8 +27,8 @@ public class ObjectSheet {
         cellsGrid = new ObjectCell[maxColNum][sheet.getLastRowNum()];
         for (int y = 0; y < sheet.getLastRowNum(); y++) {
             for (int x = 0; x < maxColNum; x++) {
-                if (sheet.getRow(y) != null && sheet.getRow(y).getCell(x+1) != null) {
-                    cellsGrid[x][y] = new ObjectCell(sheet.getRow(y).getCell(x+1));
+                if (sheet.getRow(y) != null && sheet.getRow(y).getCell(x) != null) {
+                    cellsGrid[x][y] = new ObjectCell(sheet.getRow(y).getCell(x));
                     System.out.print("["+x + "," + y + "->" + cellsGrid[x][y].toString()+"]");
                 } else {
                     cellsGrid[x][y] = new ObjectCell(x,y);
@@ -78,18 +78,21 @@ public class ObjectSheet {
 
     private ArrayList<ObjectCell> returnBlockMap(ObjectCell[][] cellsGridIn, int x, int y) {
         ArrayList<ObjectCell> outList = new ArrayList<>();
+        if(x<0 || x>cellsGridIn[x].length || y<0 || y>cellsGridIn[0].length) {
+            return outList;
+        }
 
         outList.add(cellsGridIn[x][y]);
 
         cellsGridIn[x][y]=null;
 
-        if(x>0 && cellsGridIn[(x - 1)][y]!=null && cellsGridIn[(x - 1)][y].containsData()) {
+        if(x-1>0 && cellsGridIn[(x - 1)][y]!=null && cellsGridIn[(x - 1)][y].containsData()) {
             outList.addAll( returnBlockMap( cellsGridIn, x-1,  y) );
         }
         if(x+1<cellsGridIn.length && cellsGridIn[(x + 1)][y]!=null && cellsGridIn[(x + 1)][y].containsData()) {
             outList.addAll( returnBlockMap( cellsGridIn, x+1,  y) );
         }
-        if(y>0 && cellsGridIn[x][y-1]!=null && cellsGridIn[x][y-1].containsData()) {
+        if(y-1>0 && cellsGridIn[x][y-1]!=null && cellsGridIn[x][y-1].containsData()) {
             outList.addAll( returnBlockMap( cellsGridIn, x,  y-1) );
         }
         if(y+1<cellsGridIn[0].length && cellsGridIn[x][y+1]!=null && cellsGridIn[x][y+1].containsData()) {

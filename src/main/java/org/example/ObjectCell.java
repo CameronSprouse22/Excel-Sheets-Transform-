@@ -17,11 +17,14 @@ public class ObjectCell {
     boolean hasValue;
     boolean isFormula;
     String Stringvalue;
+    String cellDis;
+    String cellUseRef;
+    Boolean cellBeingPulled;
 
     public ObjectCell(Cell cell){
         this.cell = cell;
-        this.x = cell.getColumnIndex()-1;
-        this.y = cell.getRowIndex()-1;
+        this.x = cell.getColumnIndex();
+        this.y = cell.getRowIndex();
         this.hasValue = CommonFunctions.containsRawData(cell) || cell.getCellType()==CellType.FORMULA;
         this.Stringvalue= CommonFunctions.getStringPrintValue(cell);
     }
@@ -61,4 +64,6 @@ public class ObjectCell {
     public int getY() {
         return y;
     }
+    public void setcellDis(String cellDis) {this.cellDis=cellDis;}
+    public String getcellDis() {return cellDis;}
 }
