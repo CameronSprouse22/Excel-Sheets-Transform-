@@ -19,7 +19,7 @@ public class ObjectSheet {
         int maxColNum = 0;
         for (Row row : sheet) {
             if (row != null) {
-                maxColNum = Math.max(maxColNum, row.getLastCellNum() - 1); // getLastCellNum() is 1-based
+                maxColNum = Math.max(maxColNum, row.getLastCellNum());
             }
         }
 
@@ -64,11 +64,17 @@ public class ObjectSheet {
         ObjectCell[][] nonNullCells = cellsGrid;
         int counter=0;
         ObjectCell startingCell = getNextDataCell(nonNullCells);
+        //DEL LATER
+
         while (getNextDataCell(nonNullCells) != null) {
-            System.out.println("LEEEEETH "+nonNullCells.length + nonNullCells[0].length);
+            System.out.println("LEEEEETH "+nonNullCells.length +"  "+ nonNullCells[0].length);
             ArrayList<ObjectCell> foundBlockArrayList = returnBlockMap(nonNullCells, startingCell.getX(), startingCell.getY());
-            ObjectBlock blockFound = new ObjectBlock(foundBlockArrayList,cellsGrid.length,cellsGrid[0].length);
-            blocks.add(blockFound);
+            if(counter==1) {
+                ObjectBlock blockFound = new ObjectBlock(foundBlockArrayList, cellsGrid.length, cellsGrid[0].length);
+                blocks.add(blockFound);
+            }
+            counter++;
+
             startingCell = getNextDataCell(nonNullCells);
         }
         System.out.println("------>" + blocks.size());
@@ -78,6 +84,7 @@ public class ObjectSheet {
 
     private ArrayList<ObjectCell> returnBlockMap(ObjectCell[][] cellsGridIn, int x, int y) {
         ArrayList<ObjectCell> outList = new ArrayList<>();
+        System.out.print("["+x+","+y+"]"+cellsGridIn.length);
         if(x<0 || x>cellsGridIn[x].length || y<0 || y>cellsGridIn[0].length) {
             return outList;
         }
@@ -102,7 +109,6 @@ public class ObjectSheet {
     }
 
     private ObjectCell  getNextDataCell(ObjectCell[][] cellsGridInput) {
-        ObjectCell firstNotNullCell=null;
         for(int x=0;x<cellsGridInput.length;x++){
             for(int y=0;y<cellsGridInput[x].length;y++){
                 if(cellsGridInput[x][y]!=null && cellsGridInput[x][y].containsData()){

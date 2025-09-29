@@ -6,6 +6,7 @@ public class ObjectBlock {
 
     ArrayList<ObjectCell> blockArray;
     ArrayList<ObjectRow> ObjectRows=new ArrayList<>();
+    ArrayList<ObjectCol> ObjectCols=new ArrayList<>();
     boolean isVer;
     boolean containsTable;
     boolean containsImage;
@@ -33,6 +34,10 @@ public class ObjectBlock {
     ObjectCell[] rowHeaders;
     ObjectCell[][] cellsGridData;
     ObjectCell[][] cellsGridNonData;
+    Integer rowCommonLenghts;
+    Integer colCommonLenghts;
+
+
     ArrayList<Integer> rowLengthsIncludingGap=new ArrayList<>();
 
     public ObjectBlock(ArrayList<ObjectCell> blockArray, int maxX, int maxY) {
@@ -40,7 +45,6 @@ public class ObjectBlock {
         this.blockArray=blockArray;
         this.maxX=maxX;
         this.maxY=maxY;
-        System.out.println("NEW BLOCK with maxX:"+maxX+" maxY:"+maxY+" and size:"+blockArray.size());
         grid=new ObjectCell[maxX][maxY];
         rowHeaders=new ObjectCell[maxX];
         gridNonRawDate=new ObjectCell[maxX][maxY];
@@ -64,75 +68,131 @@ public class ObjectBlock {
             }
         }
 
-        for (int x = 0; x < grid.length; x++) {
-            ObjectCell[] currentRow=new ObjectCell[rangeMaxX];
-            System.out.println("-----"+rangeMaxX);
-            for (int y = 0; y < grid[x].length; y++) {
-                currentRow[y]=grid[x][y];
+        System.out.println();
+        System.out.println();
+        for (int y = 0; y < grid[0].length; y++) {
+            ObjectCell[] currentRow=new ObjectCell[grid[0].length];
+            for (int x = 0; x < grid.length; x++) {
+                if(grid[x][y] != null) {
+                    currentRow[x]=grid[x][y];
+                    System.out.print("<"+grid[x][y]+">");
+                }else{
+                    currentRow[x]=null;
+                    System.out.print("<N>>");
+                }
             }
-            ObjectRows.add(new ObjectRow(currentRow));
+            //System.out.println("");
+            ObjectRow objectRow = new ObjectRow(currentRow);
+            ObjectRows.add(objectRow);
+            //System.out.println("-->"+objectRow.gapLenght);
+
+            if(objectRow.gapLenght >0){
+                rowLengthsIncludingGap.add(objectRow.gapLenght);
+            }
         }
+        rowCommonLenghts=getMostCommonInt(rowLengthsIncludingGap);
 
 
+        ArrayList<Integer> colLengthsIncludingGap=new ArrayList<>();
+        System.out.println(" arry size "+grid[0].length);
+        for (int x = 0; x < grid.length; x++) {
+            ObjectCell[] currentCol=new ObjectCell[grid[0].length];
+            for (int y = 0; y < grid[0].length; y++) {
+                if(grid[x][y] != null) {
+                    currentCol[y]=grid[x][y];
+                    System.out.print("["+grid[x][y]+"]");
+                }else{
+                    currentCol[y]=null;
+                    System.out.print("<N>>");
+                }
+            }
+            System.out.println("");
+            ObjectCol objectCol = new ObjectCol(currentCol);
+            ObjectCols.add(objectCol);
+            System.out.println("-->"+objectCol.gapLenght);
+
+            if(objectCol.gapLenght >0){
+                colLengthsIncludingGap.add(objectCol.gapLenght);
+            }
+        }
+        colCommonLenghts=getMostCommonInt(colLengthsIncludingGap);
+
+
+        System.out.println("COLLETH ROW->"+rowCommonLenghts+" COL->"+colCommonLenghts);
         System.out.println();
         System.out.println("------------------------------------------");
-//
-//        if(grid!=null && grid.length>1) {
-//            for (int x = 0; x < grid.length; x++) {
-//                if(grid[x][3]!=null) {
-//                    System.out.print("["+grid[x][3].toString() + "] | ");
-//                }else  {
-//                    System.out.print("[null] | ");
-//                }
-//            }
-//        }
-//        System.out.println();
-//
-//
-//
-//        height=rangeMaxY-rangeMinY;
-//        width=rangeMaxX-rangeMinX;
-//
-//
-//
-//        System.out.println("MIN Max Y:"+rangeMaxY+"--->"+rangeMinY);
-//        System.out.println("MIN Max X:"+rangeMaxX+"--->"+rangeMinX);
-//
-//        System.out.println("Height:"+height);
-//        System.out.println("Width:"+width);
 
-//
-//        if (height == 1) {
-//            if(width == 1)  {
-//                setToLabelOnly();
-//            }
-//            else{
-//                setToLabelAndFormula();
-//            }
-//            return;
-//        } else if(width == 1 )  {
-//            setToList();
-//            return;
-//        }else{
-//            findDataStructureByCommonLengths();
-//
-//            xCommonLength=findMostCommonColLength();
-//            yCommonLength=findMostCommonRowLength();
-//
-//            System.out.println("xCommonLength:"+xCommonLength);
-//            System.out.println("yCommonLength:"+yCommonLength);
-//
-//            setToDataTable();
-//        }
-//
-//        CommonFunctions.ObjectBlockPrint(grid);
-//        findRowHeaders();
+
+
+
+        height=rangeMaxY-rangeMinY;
+        width=rangeMaxX-rangeMinX;
+
+
+
+        System.out.println("MIN Max Y:"+rangeMaxY+"--->"+rangeMinY);
+        System.out.println("MIN Max X:"+rangeMaxX+"--->"+rangeMinX);
+
+        System.out.println("Height:"+height);
+        System.out.println("Width:"+width);
+
+
+        if (height == 1) {
+            if(width == 1)  {
+                setToLabelOnly();
+            }
+            else{
+                setToLabelAndFormula();
+            }
+            return;
+        } else if(width == 1 )  {
+            setToList();
+            return;
+        }else{
+            findDataStructureByCommonLengths();
+
+            xCommonLength=findMostCommonColLength();
+            yCommonLength=findMostCommonRowLength();
+
+            System.out.println("xCommonLength:"+xCommonLength);
+            System.out.println("yCommonLength:"+yCommonLength);
+
+            setToDataTable();
+        }
+
+        CommonFunctions.ObjectBlockPrint(grid);
+        findRowHeaders();
 
     }
 
+    private int findRowHeaders() {
+        boolean headerFound=false;
+        for(int x=0; x< ObjectRows.size(); x++) {
+            if(ObjectRows.get(x).gapLenght == rowCommonLenghts || ObjectRows.get(x).gapLenght == (1 - rowCommonLenghts) {
+                if(ObjectRows.get(x+1).gapLenght == rowCommonLenghts && ObjectRows.get(x+2).gapLenght == (1 - rowCommonLenghts)){
+                    return x;
+                }
+            }
+        }
+    }
 
+    private int findDataTableRange(int rowHeaderCord) {
+        boolean headerFound=false;
+        for(int x=rowHeaderCord; x< ObjectRows.size(); x++) {
+            if(ObjectRows.get(x).gapLenght == rowCommonLenghts &&ObjectRows.get(x+1).gapLenght == rowCommonLenghts && ObjectRows.get(x+2).gapLenght == (1 - rowCommonLenghts)){
+                return x;
+          }
+        }
+    }
 
-
+    private int findDataTableBnt rowHeaderCord) {
+        boolean headerFound=false;
+        for(int x=rowHeaderCord; x< ObjectRows.size(); x++) {
+            if(ObjectRows.get(x).gapLenght == rowCommonLenghts &&ObjectRows.get(x+1).gapLenght == rowCommonLenghts && ObjectRows.get(x+2).gapLenght == (1 - rowCommonLenghts)){
+                return x;
+            }
+        }
+    }
     private void getRowLengthsIncludingGap() {
 
         for(int y=rangeMinY;y< rangeMaxY;y++) {
@@ -180,7 +240,7 @@ public class ObjectBlock {
         }
     }
 
-    private void findRowHeaders() {
+    private void findRowHeaders2() {
         System.out.println();
 
         for(int y=rangeMinY;y< rangeMaxY;y++) {

@@ -2,8 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 
-public class ObjectRow {
-
+public class ObjectCol {
     ArrayList<ObjectCell> objectCellsArray=new ArrayList<>();
     Integer startNunNullXcord;
     Integer endNunNullXcord;
@@ -14,7 +13,7 @@ public class ObjectRow {
 
     Boolean isNullRow=true;
 
-    public ObjectRow(ObjectCell[] objectCells) {
+    public ObjectCol(ObjectCell[] objectCells) {
 
         int lineLenghtWithGap=0;
         int longestLineLenghtWithGap=0;
@@ -22,11 +21,9 @@ public class ObjectRow {
         int endOfLine=-1;
         boolean currentGap=false;
 
-        System.out.println();
         for(int x=0; x < objectCells.length; x++) {
-
             if(objectCells[x]!=null) {
-                System.out.print("["+objectCells[x].toString()+"]");
+                //System.out.print(objectCells[x].toString()+" *");
                 if(startNunNullXcord==null) {
                     startNunNullXcord=x;
                     endNunNullXcord=x;
@@ -36,11 +33,8 @@ public class ObjectRow {
                     endNunNullXcord=x;
                 }
 
-            }else {
-                System.out.print("[N]");
             }
             objectCellsArray.add(objectCells[x]);
-
 
 
             //Cell has value
@@ -72,15 +66,12 @@ public class ObjectRow {
                 longestLineLenghtWithGap=lineLenghtWithGap;
                 endOfLine=x;
             }
-            System.out.print("("+longestLineLenghtWithGap+")");
         }
         gapLenght=longestLineLenghtWithGap;
         startGap=startOfLineCurrent;
         endGap=endOfLine;
 //        System.out.println("");
 //        System.out.println(">>>>>>> line lenght with gap:"+longestLineLenghtWithGap+" from "+startOfLineCurrent+" to "+endOfLine);
-        System.out.println();
+
     }
-
-
 }
