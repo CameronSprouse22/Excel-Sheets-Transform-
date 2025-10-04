@@ -36,6 +36,7 @@ public class ObjectBlock {
     ObjectCell[][] cellsGridNonData;
     Integer rowCommonLenghts;
     Integer colCommonLenghts;
+    ObjectRowHeader rowHeader;
 
 
     ArrayList<Integer> rowLengthsIncludingGap=new ArrayList<>();
@@ -161,37 +162,82 @@ public class ObjectBlock {
         }
 
         CommonFunctions.ObjectBlockPrint(grid);
-        findRowHeaders();
+        rowHeader = findRowHeader();
+        findDems();
+        ExcelWriter.writeUseDisExcelFileFrom2DArray("testDESDONE" +".xlsx",grid);
 
     }
 
-    private int findRowHeaders() {
+    private Integer findDems() {
+        Integer colStart=null;
+
+        for(int y=rowHeader.getRowHeaderStart()+1; y< (rowHeader.getRowHeaderStart() + colCommonLenghts-1); y++) {
+            for(int x=ObjectRows.get(y).startGap; x <= ObjectRows.get(y).endGap; x++) {
+                if(grid[x][y] != null) {
+                    grid[x][y].setcellDis("DATA");
+                }else{
+                    ObjectCell oj = new ObjectCell(x, y);
+                    oj.setcellDis("NO DATA");
+                    grid[x][y]= oj;
+                }
+
+            }
+        }
+
+        return null;
+    }
+
+    private ObjectRowHeader findRowHeader() {
+        ObjectCell[] headRow=new ObjectCell[grid[0].length];
         boolean headerFound=false;
+        Integer rowHeader=null;
         for(int x=0; x< ObjectRows.size(); x++) {
-            if(ObjectRows.get(x).gapLenght == rowCommonLenghts || ObjectRows.get(x).gapLenght == (1 - rowCommonLenghts) {
-                if(ObjectRows.get(x+1).gapLenght == rowCommonLenghts && ObjectRows.get(x+2).gapLenght == (1 - rowCommonLenghts)){
-                    return x;
+            System.out.println(x+"-->"+ObjectRows.get(x).gapLenght+" VS "+rowCommonLenghts);
+            if(ObjectRows.get(x).gapLenght >= ( rowCommonLenghts-1) ){
+                    rowHeader=x;
+                    break;
+            }
+        }
+
+        Integer colStart=null;
+        Integer colEnd=null;
+        for(int x=0; x< ObjectCols.size(); x++) {
+            if((ObjectCols.get(x).gapLenght > ObjectRows.get(rowHeader+1).endGap)){
+                colEnd=x;
+                while(ObjectCols.size() > colEnd+1 && ObjectCols.get(colEnd).gapLenght > commonLengthWithGap){
+                    grid[colEnd ][rowHeader].setcellDis("HEADER");
+                    headRow[colEnd]=grid[colEnd ][rowHeader];
+                    colEnd++;
+
                 }
             }
         }
+        ObjectRowHeader objectRowHeader=new ObjectRowHeader(headRow,rowHeader);
+        System.out.println("  HEADER ROW ");
+        System.out.println(objectRowHeader.toString());
+        return objectRowHeader;
     }
 
-    private int findDataTableRange(int rowHeaderCord) {
+    private Integer findDataTableRange(int rowHeaderCord) {
         boolean headerFound=false;
         for(int x=rowHeaderCord; x< ObjectRows.size(); x++) {
             if(ObjectRows.get(x).gapLenght == rowCommonLenghts &&ObjectRows.get(x+1).gapLenght == rowCommonLenghts && ObjectRows.get(x+2).gapLenght == (1 - rowCommonLenghts)){
                 return x;
           }
         }
+        //TODO
+        return null;
     }
 
-    private int findDataTableBnt rowHeaderCord) {
+    private Integer findDataTableBnt(int rowHeaderCord) {
         boolean headerFound=false;
         for(int x=rowHeaderCord; x< ObjectRows.size(); x++) {
             if(ObjectRows.get(x).gapLenght == rowCommonLenghts &&ObjectRows.get(x+1).gapLenght == rowCommonLenghts && ObjectRows.get(x+2).gapLenght == (1 - rowCommonLenghts)){
                 return x;
             }
         }
+        //TODO
+        return null;
     }
     private void getRowLengthsIncludingGap() {
 
@@ -512,6 +558,8 @@ public class ObjectBlock {
     public ObjectCell[][] getBlockGrid(){
         return grid;
     }
+
+
 
 
 

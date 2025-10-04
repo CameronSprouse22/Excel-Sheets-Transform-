@@ -57,7 +57,7 @@ public class ObjectRow {
                 }
                 lineLenghtWithGap++;
                 //Cell has no value
-            }else if(currentGap){
+            }else if(currentGap || lineLenghtWithGap==0){
                 if(lineLenghtWithGap>longestLineLenghtWithGap){
                     longestLineLenghtWithGap=lineLenghtWithGap;
                     endOfLine=x;
@@ -77,9 +77,30 @@ public class ObjectRow {
         gapLenght=longestLineLenghtWithGap;
         startGap=startOfLineCurrent;
         endGap=endOfLine;
-//        System.out.println("");
-//        System.out.println(">>>>>>> line lenght with gap:"+longestLineLenghtWithGap+" from "+startOfLineCurrent+" to "+endOfLine);
+        if(endOfLine != -1 && objectCells[endOfLine] != null) {
+            System.out.println(longestLineLenghtWithGap +")))) "+objectCells[endOfLine].toString());
+        }else{
+            System.out.println(longestLineLenghtWithGap +")))) N");
+        }
+
+        System.out.println("");
+        System.out.println(">>>>>>> line lenght with gap:"+longestLineLenghtWithGap+" from "+startOfLineCurrent+" to "+endOfLine);
+        System.out.println(">>>>>>> line lenght with gap:"+longestLineLenghtWithGap+" from "+startGap+" to "+endGap);
         System.out.println();
+    }
+
+    @Override
+    public String toString(){
+        String str="";
+        for(int x=0; x < objectCellsArray.size(); x++) {
+            if(objectCellsArray.get(x) != null) {
+                str+="("+x+")["+objectCellsArray.get(x).toString()+"] | ";
+            }else{
+                str+="("+x+")[N] | ";
+            }
+
+        }
+        return str;
     }
 
 
