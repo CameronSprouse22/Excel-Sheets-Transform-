@@ -50,7 +50,7 @@ public class ObjectBlock {
         rowHeaders=new ObjectCell[maxX];
         gridNonRawDate=new ObjectCell[maxX][maxY];
         gridRawDate=new ObjectCell[maxX][maxY];
-
+        cellsGridData=new ObjectCell[maxX][maxY];
         for(ObjectCell cell:blockArray) {
             grid[cell.getX()][cell.getY()] = cell;
 //            System.out.print("["+cell.getX()+","+cell.getY()+"]");
@@ -164,7 +164,26 @@ public class ObjectBlock {
         CommonFunctions.ObjectBlockPrint(grid);
         rowHeader = findRowHeader();
         findDems();
+        setAttachedCells();
         ExcelWriter.writeUseDisExcelFileFrom2DArray("testDESDONE" +".xlsx",grid);
+
+    }
+
+    private void setAttachedCells() {
+
+        for(int x = 0; x < grid.length; x++) {
+            for(int y = 0; y < grid[0].length; y++) {
+                if(grid[x][y] != null &&  grid[x][y].getcellDis() == null) {
+                    if(grid[x][y].isFormula){
+                        grid[x][y].setcellDis("ATTACHED FORMULA");
+                    }else{
+                        grid[x][y].setcellDis("ATTACHED LABLE");
+                    }
+                    gridNonRawDate[x][y]=grid[x][y];
+                }
+
+            }
+        }
 
     }
 
@@ -175,10 +194,11 @@ public class ObjectBlock {
             for(int x=ObjectRows.get(y).startGap; x <= ObjectRows.get(y).endGap; x++) {
                 if(grid[x][y] != null) {
                     grid[x][y].setcellDis("DATA");
+                    cellsGridData[x][y]=grid[x][y];
                 }else{
-                    ObjectCell oj = new ObjectCell(x, y);
-                    oj.setcellDis("NO DATA");
-                    grid[x][y]= oj;
+//                    ObjectCell oj = new ObjectCell(x, y);
+//                    oj.setcellDis("NO DATA");
+//                    grid[x][y]= oj;
                 }
 
             }
@@ -201,16 +221,10 @@ public class ObjectBlock {
 
         Integer colStart=null;
         Integer colEnd=null;
-        for(int x=0; x< ObjectCols.size(); x++) {
-            if((ObjectCols.get(x).gapLenght > ObjectRows.get(rowHeader+1).endGap)){
+        for(int x=ObjectRows.get(rowHeader+1).startGap; x<=ObjectRows.get(rowHeader+1).endGap; x++) {
                 colEnd=x;
-                while(ObjectCols.size() > colEnd+1 && ObjectCols.get(colEnd).gapLenght > commonLengthWithGap){
-                    grid[colEnd ][rowHeader].setcellDis("HEADER");
-                    headRow[colEnd]=grid[colEnd ][rowHeader];
-                    colEnd++;
-
-                }
-            }
+                grid[colEnd ][rowHeader].setcellDis("HEADER");
+                headRow[colEnd]=grid[colEnd ][rowHeader];
         }
         ObjectRowHeader objectRowHeader=new ObjectRowHeader(headRow,rowHeader);
         System.out.println("  HEADER ROW ");
