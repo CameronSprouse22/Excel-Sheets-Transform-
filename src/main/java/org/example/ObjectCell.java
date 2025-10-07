@@ -5,6 +5,8 @@ import org.apache.poi.ss.usermodel.CellType;
 
 public class ObjectCell {
     Cell cell;
+    EnumCellType cellType;
+    EnumDataType dataType;
     private final int x;
     private final int y;
     boolean isDetachedFormula;
@@ -52,6 +54,14 @@ public class ObjectCell {
 
     public boolean containsData() {
         return hasValue;
+    }
+
+    public EnumCellType getCellType() {
+        return cellType;
+    }
+
+    public void setCellType(String cellTypeString) {
+        cellType= EnumCellType.valueOf(cellTypeString.toUpperCase());
     }
 
     public boolean isFormula() {

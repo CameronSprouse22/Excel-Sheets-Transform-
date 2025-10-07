@@ -26,6 +26,7 @@ public class CommonFunctionsTest {
 
     @Test
     public void markTypesBlocksWrite() throws IOException {
+        ExcelWriter.deleteTempFiles();
         ObjectFile of = new ObjectFile(sampleFilePath);
         Sheet sampleSheet = of.getSheets().get(0);
         ObjectSheet os = new ObjectSheet(sampleSheet);

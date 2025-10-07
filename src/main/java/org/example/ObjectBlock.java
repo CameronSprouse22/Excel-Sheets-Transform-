@@ -166,6 +166,7 @@ public class ObjectBlock {
         findDems();
         setAttachedCells();
         ExcelWriter.writeUseDisExcelFileFrom2DArray("testDESDONE" +".xlsx",grid);
+        ExcelWriter.writeUseDataTypesExcelFileFrom2DArray("testShowTypes" +".xlsx",grid);
 
     }
 
@@ -194,7 +195,8 @@ public class ObjectBlock {
             for(int x=ObjectRows.get(y).startGap; x <= ObjectRows.get(y).endGap; x++) {
                 if(grid[x][y] != null) {
                     grid[x][y].setcellDis("DATA");
-                    cellsGridData[x][y]=grid[x][y];
+                    cellsGridData[x][y]=FormatedTypes.getDataFormating(grid[x][y]);
+                    //cellsGridData[x][y]=grid[x][y];
                 }else{
 //                    ObjectCell oj = new ObjectCell(x, y);
 //                    oj.setcellDis("NO DATA");
